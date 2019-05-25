@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using ContactForm.Model;
+using System.Threading.Tasks;
 
 namespace ContactForm.Data
 {
-	interface IMessageService
+	public interface IMessageService
 	{
+		Task SaveMessage(Message message);
 	}
 }

@@ -26,6 +26,8 @@ export class ContactForm extends Component {
 
   formSubmit = (e) => {
     e.preventDefault()
+    
+    // TODO: client side validation :)
   
     this.lockForm();
   
@@ -43,17 +45,33 @@ export class ContactForm extends Component {
       },
       body: JSON.stringify(data)
     })
-    .then( res => {
-      this.resetForm();
+    .then((e) => {
+      if (!e.ok) {
+        this.formError(e)
+      }
+      else {
+        this.resetForm();
+        this.setState({
+          alertText: 'Message sent successfully',
+          alertType: 'success',
+          alertVisible: true
+        })
+      }
     })
     .catch((e) => {
-      this.setState({
-        alertText: 'Message Not Sent',
-        alertType: 'danger',
-        alertVisible: true
+      this.formError(e);
     })
-      console.log('Message not sent: ' + e.message);
+  }
+
+  formError = (e) => {
+    this.resetForm();
+    this.setState({
+      alertText: 'Message Not Sent',
+      alertType: 'danger',
+      alertVisible: true
     })
+    
+    console.log('Message not sent');
   }
 
   resetForm = () => {
@@ -61,11 +79,8 @@ export class ContactForm extends Component {
       name: '',
       message: '',
       email: '',
-      buttonText: 'Send Message',
-      alertText: 'Message sent successfully',
-      alertType: 'success',
-      alertVisible: true,
-      submitEnabled: true
+      submitEnabled: true,
+      buttonText: 'Send Message'
     })
   }
 

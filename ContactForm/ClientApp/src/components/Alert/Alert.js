@@ -6,7 +6,7 @@ export class Alert extends Component {
             <div>
             {
                 this.props.alertVisible ? 
-                <div class= { this.props.alertType ? 'alert alert-' + this.props.alertType : '' } role="alert">
+                <div className= { this.props.alertType ? 'alert alert-' + this.props.alertType : '' } role="alert">
                     {this.props.alertText}
                 </div> 
                 : null 

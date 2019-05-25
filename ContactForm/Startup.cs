@@ -30,6 +30,8 @@ namespace ContactForm
 				configuration.RootPath = "ClientApp/build";
 			});
 
+			services.AddTransient<IMessageService, DatabaseMessageService>();
+
 			services.AddDbContext<ContactFormContext>(options =>
 					options.UseSqlServer(Configuration.GetConnectionString("ContactFormSqlConnection")));
 

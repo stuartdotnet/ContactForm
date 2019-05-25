@@ -2,28 +2,31 @@
 using Microsoft.AspNetCore.Mvc;
 using ContactForm.Data;
 using ContactForm.Model;
+using System.Net;
 
 namespace ContactForm.Controllers
 {
 	[Route("api/[controller]")]
-    [ApiController]
-    public class MessagesController : ControllerBase
-    {
-        private readonly ContactFormContext _context;
+	[ApiController]
+	public class MessagesController : ControllerBase
+	{
+		private IMessageService _service;
+		public MessagesController(IMessageService service)
+		{
+			_service = service;
+		}
 
-        public MessagesController(ContactFormContext context)
-        {
-            _context = context;
-        }
+		// POST: api/Messages
+		[HttpPost]
+		public async Task<ActionResult<Message>> PostMessage(Message message)
+		{
+			if (!ModelState.IsValid)
+			{
+				return new BadRequestObjectResult(ModelState);
+			}
 
-        // POST: api/Messages
-        [HttpPost]
-        public async Task<ActionResult<Message>> PostMessage(Message message)
-        {
-            _context.Messages.Add(message);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetMessage", new { id = message.MessageID }, message);
-        }
-    }
+			await _service.SaveMessage(message);
+			return Ok();
+		}
+	}
 }
