@@ -51,7 +51,6 @@ namespace ContactForm
 				app.UseHsts();
 			}
 
-			app.UseHttpsRedirection();
 			app.UseStaticFiles();
 			app.UseSpaStaticFiles();
 
