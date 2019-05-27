@@ -18,11 +18,9 @@ namespace ContactForm.UnitTests
 		}
 
 		[Fact]
-		public async Task MessagesPost_ReturnsBadRequestResult_WhenModelStateIsInvalid()
+		public async Task MessagesPost_WhenModelStateIsInvalid_ReturnsBadRequestResult()
 		{
 			// Arrange
-			var newMessage = new Message { FromEmail = "", FromName = "", Text = "" };
-
 			_mockService.Setup(repo => repo.SaveMessage(It.IsAny<Message>()))
 				.Returns(Task.CompletedTask);
 
@@ -38,7 +36,7 @@ namespace ContactForm.UnitTests
 		}
 
 		[Fact]
-		public async Task MessagesPost_ReturnsOkResult_WhenModelStateIsValid()
+		public async Task MessagesPost_WhenModelStateIsValid_ReturnsOkResult()
 		{
 			// Arrange
 			var newMessage = new Message { FromEmail = "chris@thesty.com", FromName = "Chris P. Bacon", Text = "Hello" };
@@ -53,6 +51,38 @@ namespace ContactForm.UnitTests
 
 			// Assert
 			Assert.IsType<OkResult>(result.Result);
+		}
+
+		[Fact]
+		public async Task MessagesPost_WhenNoEmail_ReturnsBadRequestsResult()
+		{
+			// Arrange
+			var newMessage = new Message { FromEmail = null, FromName = "Chris P. Bacon", Text = "Hello" };
+
+			var controller = new MessagesController(_mockService.Object);
+
+			// Act
+			controller.SimulateValidation(newMessage);
+			var result = await controller.PostMessage(newMessage);
+
+			// Assert
+			Assert.IsType<BadRequestObjectResult>(result.Result);
+		}
+
+		[Fact]
+		public async Task MessagesPost_WhenNameEmpty_ReturnsBadRequestsResult()
+		{
+			// Arrange
+			var newMessage = new Message { FromEmail = "test@test.com", FromName = string.Empty, Text = "Hello" };
+
+			var controller = new MessagesController(_mockService.Object);
+
+			// Act
+			controller.SimulateValidation(newMessage);
+			var result = await controller.PostMessage(newMessage);
+
+			// Assert
+			Assert.IsType<BadRequestObjectResult>(result.Result);
 		}
 	}
 }
